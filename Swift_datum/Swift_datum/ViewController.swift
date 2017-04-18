@@ -14,33 +14,32 @@ class ViewController: NSViewController {
 
     @IBOutlet weak var datePicker: NSDatePicker!
     
+    var datumISO8601 = DateFormatter()
+    
+    var nazivVremenskeZone: String { return TimeZone.current.identifier }
+    
     @IBAction func dohvati(_ sender: Any) {
-        print("dohvaćam")
-        let adresa = URL(string: "http://it.ffos.hr/fz2017/dohvati.php")!
+        //print("dohvaćam")
+        
+        let url = "http://it.ffos.hr/fz2017/dohvatiJSON.php?timezone=" + nazivVremenskeZone;
+        
+        //print(url);
+        
+        let adresa = URL(string: url)!
         let request = URLRequest(url: adresa)
-      
+        
         let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
-            guard let data = data, let json = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: Any], let datum = json["datumRCF3339"] as? String else {
+            guard let data = data, let json = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: Any], let datum = json["datumISO8601"] as? String else {
                 return
             }
             DispatchQueue.main.async(execute: {
-                
-                print(datum)
-          
-                let hr_HR = NSLocale(localeIdentifier: "hr_HR")
-                let rfc3339DateFormatter = DateFormatter()
-                rfc3339DateFormatter.locale = hr_HR as Locale!
-                rfc3339DateFormatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ssXXX"
-                rfc3339DateFormatter.timeZone = NSTimeZone(forSecondsFromGMT: 0) as TimeZone!
-                
-                let date = rfc3339DateFormatter.date(from: datum)
-                
+                //print(datum)
+                let date = self.datumISO8601.date(from: datum)
                 self.datePicker.dateValue=date!
-                
-                //print( date)
             })
-        }) 
+        })
         task.resume()
+
         
         
     }
@@ -48,59 +47,47 @@ class ViewController: NSViewController {
   
     
     @IBAction func posalji(_ sender: Any) {
-        print("datum ",datePicker.dateValue)
         
-        print("Saljem")
-        let adresa = URL(string: "http://it.ffos.hr/fz2017/posalji.php?datum=")!
-        let request = URLRequest(url: adresa)
+        //print("Šaljem")
         
-        let hr_HR = NSLocale(localeIdentifier: "hr_HR")
-        let rfc3339DateFormatter = DateFormatter()
-        rfc3339DateFormatter.locale = hr_HR as Locale!
-        rfc3339DateFormatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ssXXX"
-        rfc3339DateFormatter.timeZone = NSTimeZone(forSecondsFromGMT: 0) as TimeZone!
+        let json: [String: Any] = ["timezone": nazivVremenskeZone,
+                                   "datum": self.datumISO8601.string(from: self.datePicker.dateValue),
+                                   "klijent": "swift"]
         
-        let date = rfc3339DateFormatter.date(from: datum)
+        let jsonData = try? JSONSerialization.data(withJSONObject: json)
+
+        //print(datumISO8601.string(from: self.datePicker.dateValue))
         
-        let task = URLSession.shared.dataTask(with: request, completionHandler: { (data, response, error) -> Void in
-            guard let data = data, let json = (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: Any], let datum = json["datumISO8601"] as? String else {
+        
+        let url = URL(string: "http://it.ffos.hr/fz2017/insertJSON.php")!
+
+        let request = NSMutableURLRequest(url: url)
+        request.httpMethod = "POST"
+        request.cachePolicy = NSURLRequest.CachePolicy.reloadIgnoringCacheData
+        request.httpBody = jsonData
+        
+        let task = URLSession.shared.dataTask(with: request as URLRequest) { (data, response, error) in
+            guard let _: Data = data, let _: URLResponse = response, error == nil else {
+                print("*****error")
                 return
             }
-            DispatchQueue.main.async(execute: {
-                
-                print(datum)
-                
-                
-                let rfc3339DateFormatter = DateFormatter()
-                rfc3339DateFormatter.locale = hr_HR as Locale!
-                rfc3339DateFormatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ssXXX"
-                rfc3339DateFormatter.timeZone = NSTimeZone(forSecondsFromGMT: 0) as TimeZone!
-                
-                let date = rfc3339DateFormatter.date(from: datum)
-                
-                self.datePicker.dateValue=date!
-                
-                //print( date)
-            })
-        })
-        task.resume()
-        
-        
-    }
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
-
-    override var representedObject: Any? {
-        didSet {
-        // Update the view, if already loaded.
+            let dataString = NSString(data: data!, encoding: String.Encoding.utf8.rawValue)
+            print("*****Vratio server: \(String(describing: dataString))")
         }
+        task.resume()
+
+
+        
+            }
+    
+    override func viewDidLoad() {
+        let hr_HR = NSLocale(localeIdentifier: "hr_HR")
+        self.datumISO8601 = DateFormatter()
+        self.datumISO8601.locale = hr_HR as Locale!
+        self.datumISO8601.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ssXXX"
+        self.datumISO8601.timeZone = TimeZone.current
+
     }
-    
-    
-   
     
     
 

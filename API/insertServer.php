@@ -1,10 +1,11 @@
 <?php
 include_once 'konfiguracija.php';
 
-$sada = new DateTime('now', new DateTimeZone('Asia/Jakarta'));
-
+$sada = new DateTime('0000-00-00', new DateTimeZone("Europe/Zagreb"));
 $veza->query("SET time_zone = '". $sada->format("P") ."'");
 
+
+$sada = new DateTime(date(), new DateTimeZone("Europe/Zagreb"));
 
 try {
     $izraz = $veza->prepare("insert into podatak
