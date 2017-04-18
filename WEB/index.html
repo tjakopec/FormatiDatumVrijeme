@@ -92,16 +92,36 @@ function posaljiNaServer(){
 	
 	var currentTimezone = jstz.determine();
 	 var timezone = currentTimezone.name();
-	 console.log(timezone);
+	 
+	 
+	 var date = $("#datepicker").datepicker( "getDate" );
+	 var d = new Date(date.getFullYear(), date.getMonth() + 1, date.getDate(),0,0,0,0,0);
+	 
+	 //console.log(d);
 	
-	var d = new Date($("#datepicker").datepicker( "getDate" ));
-
+	
 	var s = dateAdd(d, 'hour', $("#input-a").val().split(":")[0]);
 	var m = dateAdd(s, 'minute', $("#input-a").val().split(":")[1]);
 	//moment.tz(m, timezone);
-	console.log(m);
+	//console.log(m.toISOString());
 	
-	
+
+var userTimezoneOffset = m.getTimezoneOffset() * (-60000);
+var datumZaServer = new Date(m.getTime() + userTimezoneOffset);
+
+var jsonPodaci ={timezone: timezone, datum: datumZaServer.toISOString(), klijent: "javascript"};
+
+jQuery.ajax ({
+    url: "../insertJSON.php",
+    type: "POST",
+    data: JSON.stringify(jsonPodaci),
+    dataType: "json",
+    contentType: "application/json; charset=utf-8",
+    success: function(){
+        console.log("OK");
+    }
+});
+//console.log(datumZaServer.toISOString());
 		
 }
 
@@ -122,6 +142,9 @@ function dateAdd(date, interval, units) {
   }
   return ret;
 }
+
+
+
 
 
 </script>

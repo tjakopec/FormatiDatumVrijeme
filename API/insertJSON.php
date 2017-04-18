@@ -5,6 +5,9 @@ include_once 'konfiguracija.php';
 $inputJSON = file_get_contents('php://input');
 $primio = (object)json_decode($inputJSON, TRUE);
 
+//print_r($primio);
+
+
 $vrijeme = new DateTime($primio->datum, new DateTimeZone($primio->timezone));//DateTime::createFromFormat(DateTime::ISO8601, $primio->datum);
 
 
