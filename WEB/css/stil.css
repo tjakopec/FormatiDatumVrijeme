@@ -1,0 +1,17 @@
+a img{
+	max-width: 50px;
+}
+
+#ucitaj{
+	margin: 20px;
+	padding: 20px;
+	font-size: 2em;
+}
+
+#ucitaj, #datepicker{
+	float: left;
+}
+
+.clear{
+	clear: both;
+}

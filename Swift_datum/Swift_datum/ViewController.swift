@@ -19,7 +19,7 @@ class ViewController: NSViewController {
     
     var nazivVremenskeZone: String { return TimeZone.current.identifier }
     
-    var server: String {return "http://it.ffos.hr/fz2017/"}
+    var server: String {return "http://it.ffos.hr/fz2017/API/"}
     
     var formatDatumaJSON: String {return "datumISO8601" }
     

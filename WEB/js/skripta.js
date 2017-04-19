@@ -1,3 +1,64 @@
+"use strict";
+
+var putanjaAPIucitaj = "../API/dohvatiJSON.php";
+var putanjaAPIposalji = "../API/insertJSON.php";
+
+//koristim http://momentjs.com/
+var currentTimezone = jstz.determine();
+var timezone = currentTimezone.name();
+
+function ucitajSServera(){
+	jQuery.ajax ({
+	    url: putanjaAPIucitaj + "?timezone=" + timezone,
+	    type: "GET",
+	    success: function(vratioServer){
+	    	var instancaObjekta = JSON.parse(vratioServer);
+	    	var datum = new Date(instancaObjekta.datumISO8601);
+	    	$('#datepicker').datepicker('setDate', datum);
+	    	var sati = datum.getHours();
+	    	if(sati<10){
+	    		sati = "0" + sati;
+	    	}
+	    	var minute = datum.getMinutes();
+	    	if(minute<10){
+	    		minute = "0" + minute;
+	    	}
+	    	$("#input-a").val(sati + ":" + minute);
+	       // console.log(datum);
+	    }
+	});
+}
+
+
+//pozvano od afterDone na  clockpicker
+function posaljiNaServer(){
+
+	var d = $("#datepicker").datepicker( "getDate" );
+	var s = dateAdd(d, 'hour', $("#input-a").val().split(":")[0]);
+	var m = dateAdd(s, 'minute', $("#input-a").val().split(":")[1]);
+
+	//moram se riješiti offseta jer ostaje +2. Slanjem timezone stringa na server osiguravam ispravan rad
+	var userTimezoneOffset = m.getTimezoneOffset() * (-60000);
+	var datumZaServer = new Date(m.getTime() + userTimezoneOffset);
+	
+	var jsonPodaci ={timezone: timezone, datum: datumZaServer.toISOString(), klijent: "javascript"};
+	
+	jQuery.ajax ({
+	    url: putanjaAPIposalji,
+	    type: "POST",
+	    data: JSON.stringify(jsonPodaci),
+	    dataType: "json",
+	    contentType: "application/json; charset=utf-8",
+	    success: function(){
+	        console.log("OK");
+	    }
+	});
+}
+
+$("#ucitaj").click(function(){
+	ucitajSServera();
+	return false;
+});
 
 //https://jqueryui.com/datepicker/
 $.datepicker.setDefaults({
@@ -43,35 +104,6 @@ $('#button-b').click(function(e){
     input.clockpicker('show')
             .clockpicker('toggleView', 'hours');
 });
-
-
-//pozvano od afterDone na  clockpicker
-function posaljiNaServer(){
-	//koristim http://momentjs.com/
-	var currentTimezone = jstz.determine();
-	var timezone = currentTimezone.name();
-
-	var d = $("#datepicker").datepicker( "getDate" );
-	var s = dateAdd(d, 'hour', $("#input-a").val().split(":")[0]);
-	var m = dateAdd(s, 'minute', $("#input-a").val().split(":")[1]);
-
-	//moram se riješiti offseta jer ostaje +2. Slanjem timezone stringa na server osiguravam ispravan rad
-	var userTimezoneOffset = m.getTimezoneOffset() * (-60000);
-	var datumZaServer = new Date(m.getTime() + userTimezoneOffset);
-	
-	var jsonPodaci ={timezone: timezone, datum: datumZaServer.toISOString(), klijent: "javascript"};
-	
-	jQuery.ajax ({
-	    url: "../insertJSON.php",
-	    type: "POST",
-	    data: JSON.stringify(jsonPodaci),
-	    dataType: "json",
-	    contentType: "application/json; charset=utf-8",
-	    success: function(){
-	        console.log("OK");
-	    }
-	});
-}
 
 
 //http://jsfiddle.net/pvkovalev/7mg9audg/

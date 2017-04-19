@@ -15,3 +15,6 @@ vrijeme time, #MySQL retrieves and displays TIME values in 'HH:MM:SS' format (or
 datumvrijeme datetime, #The DATETIME type is used for values that contain both date and time parts. MySQL retrieves and displays DATETIME values in 'YYYY-MM-DD HH:MM:SS' format. The supported range is '1000-01-01 00:00:00' to '9999-12-31 23:59:59'.
 datumvrijemetimezone timestamp #MySQL converts TIMESTAMP values from the current time zone to UTC for storage, and back from UTC to the current time zone for retrieval.
 )engine=innodb CHARACTER SET utf8 COLLATE utf8_general_ci;
+
+
+#na ofset vremenske zone utječe ljetno računanje vremena
