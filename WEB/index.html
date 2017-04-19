@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="us">
+<html lang="en">
 <head>
 	<meta charset="utf-8">
 	<title>Web klijent</title>
@@ -19,12 +19,14 @@
 
 <button type="button" id="ucitaj">Učitaj</button>
 
-<div id="datepicker"></div>
+<div id="datepicker">
+	
+</div>
 
 
 
 <div class="container">
-    <input id="input-a" value="" data-default="20:48">
+    <input id="input-a" value="" />
     <button type="button" id="button-a">Odaberi minute</button>
     <button type="button" id="button-b">Odaberi sate</button>
 </div>
@@ -38,7 +40,7 @@
 <script>
 
 
-
+//https://jqueryui.com/datepicker/
 $.datepicker.setDefaults({
 	closeText: "Zatvori",
 	prevText: "&#x3C;",
@@ -64,69 +66,56 @@ $( "#datepicker" ).datepicker({
 
 
 
-
+//https://weareoutman.github.io/clockpicker/
 var input = $('#input-a');
 input.clockpicker({
     autoclose: true,
     afterDone: function() {
-                            posaljiNaServer();
-                        }
+		posaljiNaServer();
+    }
 });
-
-// Manual operations
 $('#button-a').click(function(e){
-    // Have to stop propagation here
     e.stopPropagation();
     input.clockpicker('show')
             .clockpicker('toggleView', 'minutes');
 });
 $('#button-b').click(function(e){
-    // Have to stop propagation here
     e.stopPropagation();
     input.clockpicker('show')
             .clockpicker('toggleView', 'hours');
 });
 
 
+//pozvano od afterDone na  clockpicker
 function posaljiNaServer(){
-	
+	//koristim http://momentjs.com/
 	var currentTimezone = jstz.determine();
-	 var timezone = currentTimezone.name();
-	 
-	 
-	 var d = $("#datepicker").datepicker( "getDate" );
-	// var d = new Date(date.getFullYear(), date.getMonth(), date.getDate(),0,0,0,0,0);
-	 
-	 //console.log(d);
-	
-	
+	var timezone = currentTimezone.name();
+
+	var d = $("#datepicker").datepicker( "getDate" );
 	var s = dateAdd(d, 'hour', $("#input-a").val().split(":")[0]);
 	var m = dateAdd(s, 'minute', $("#input-a").val().split(":")[1]);
-	//moment.tz(m, timezone);
-	//console.log(m.toISOString());
+
+	//moram se riješiti offseta jer ostaje +2. Slanjem timezone stringa na server osiguravam ispravan rad
+	var userTimezoneOffset = m.getTimezoneOffset() * (-60000);
+	var datumZaServer = new Date(m.getTime() + userTimezoneOffset);
 	
-
-//moram se riješiti offseta jer ostaje +2. Slanjem timezone stringa na server osiguravam ispravan rad
-var userTimezoneOffset = m.getTimezoneOffset() * (-60000);
-var datumZaServer = new Date(m.getTime() + userTimezoneOffset);
-
-var jsonPodaci ={timezone: timezone, datum: datumZaServer.toISOString(), klijent: "javascript"};
-
-jQuery.ajax ({
-    url: "../insertJSON.php",
-    type: "POST",
-    data: JSON.stringify(jsonPodaci),
-    dataType: "json",
-    contentType: "application/json; charset=utf-8",
-    success: function(){
-        console.log("OK");
-    }
-});
-//console.log(datumZaServer.toISOString());
-		
+	var jsonPodaci ={timezone: timezone, datum: datumZaServer.toISOString(), klijent: "javascript"};
+	
+	jQuery.ajax ({
+	    url: "../insertJSON.php",
+	    type: "POST",
+	    data: JSON.stringify(jsonPodaci),
+	    dataType: "json",
+	    contentType: "application/json; charset=utf-8",
+	    success: function(){
+	        console.log("OK");
+	    }
+	});
 }
 
 
+//http://jsfiddle.net/pvkovalev/7mg9audg/
 function dateAdd(date, interval, units) {
   var ret = new Date(date); //don't change original date
   var checkRollover = function() { if(ret.getDate() != date.getDate()) ret.setDate(0);};
@@ -143,9 +132,6 @@ function dateAdd(date, interval, units) {
   }
   return ret;
 }
-
-
-
 
 
 </script>
