@@ -1,6 +1,7 @@
 # FormatiDatumVrijeme
 Radionica na temu Formati datuma i vremena korišteni u različitim formatima zapisa, programskim i drugim jezicima u sklopu Festivala znanosti 2017
 
+ODRŽANO: 25. travnja 2017. u 19:00
 
 CILJANA PUBLIKA: studenti, entuzijasti, srednjoškolci
 
