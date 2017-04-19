@@ -94,8 +94,8 @@ function posaljiNaServer(){
 	 var timezone = currentTimezone.name();
 	 
 	 
-	 var date = $("#datepicker").datepicker( "getDate" );
-	 var d = new Date(date.getFullYear(), date.getMonth() + 1, date.getDate(),0,0,0,0,0);
+	 var d = $("#datepicker").datepicker( "getDate" );
+	// var d = new Date(date.getFullYear(), date.getMonth(), date.getDate(),0,0,0,0,0);
 	 
 	 //console.log(d);
 	
@@ -106,6 +106,7 @@ function posaljiNaServer(){
 	//console.log(m.toISOString());
 	
 
+//moram se riješiti offseta jer ostaje +2. Slanjem timezone stringa na server osiguravam ispravan rad
 var userTimezoneOffset = m.getTimezoneOffset() * (-60000);
 var datumZaServer = new Date(m.getTime() + userTimezoneOffset);
 
