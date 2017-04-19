@@ -20,7 +20,7 @@ Tijek radionice:
 * Kreiranje Android aplikacije
 
 Što nakon radionice?
-Preuzeti kod te sve aplikacije upogoni na njemu dostupnim resursima te dopuni/doradi/poboljša i postavi na javni repozitorij!
+Preuzeti kod te sve aplikacije upogoniti na dostupnim resursima te dopuniti/doraditi/poboljšati i postavi na javni repozitorij!
 
 Korišteni izvori
 * [ISO 8601:2004 - Data elements and interchange formats -- Information interchange -- Representation of dates and times]
@@ -34,6 +34,11 @@ Korišteni izvori
 * [ClockPicker]
 * [Moments.js]
 * [function dateAdd(date, interval, units) - JSFiddle]
+* [Pickers | Android Developers]
+* [AsyncTask | Android Developers]
+* [How to use a web API from your Android app]
+* [Converting ISO 8601-compliant String to java.util.Date - Stack Overflow]
+* [Android DateUtils for RFC 1123 dates and ISO 8601 dates]
 
 
 
@@ -53,7 +58,11 @@ Korišteni izvori
    [ClockPicker]: <https://weareoutman.github.io/clockpicker/>
    [Moments.js]: <http://momentjs.com/>
    [function dateAdd(date, interval, units) - JSFiddle]:<http://jsfiddle.net/pvkovalev/7mg9audg//>
-
+   [Pickers | Android Developers]: <https://developer.android.com/guide/topics/ui/controls/pickers.html>
+   [AsyncTask | Android Developers]: <https://developer.android.com/reference/android/os/AsyncTask.html>
+   [How to use a web API from your Android app]: <http://www.androidauthority.com/use-remote-web-api-within-android-app-617869/>
+   [Converting ISO 8601-compliant String to java.util.Date - Stack Overflow]: <http://stackoverflow.com/questions/2201925/converting-iso-8601-compliant-string-to-java-util-date>
+   [Android DateUtils for RFC 1123 dates and ISO 8601 dates]: <https://gist.github.com/mraccola/702330625fad8eebe7d3>
 
 
 
