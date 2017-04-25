@@ -18,3 +18,21 @@ datumvrijemetimezone timestamp #MySQL converts TIMESTAMP values from the current
 
 
 #na ofset vremenske zone utječe ljetno računanje vremena
+
+
+
+#primjeri
+SET time_zone='Europe/London';
+SELECT datumvrijeme, UNIX_TIMESTAMP(datumvrijemetimezone), datumvrijemetimezone FROM podatak;
+
+SET time_zone='Europe/Zagreb';
+SELECT datumvrijeme, UNIX_TIMESTAMP(datumvrijemetimezone), datumvrijemetimezone FROM podatak;
+
+#koliko ste dana stari
+# select datediff("1980-12-07",now());
+
+#Dosadašnji broj otkucaja Vašeg srca
+select TIMESTAMPDIFF(MINUTE, '1980-12-07', now())*80; # ako je 80 prosječan broj
+
+#pojedini djelovi datuma i vremena
+select year(now()), month(now()), day(now()), hour(now()), minute(now()), second(now());

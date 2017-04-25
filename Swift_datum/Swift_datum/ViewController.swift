@@ -80,7 +80,37 @@ class ViewController: NSViewController {
         self.datumISO8601.locale = hr_HR as Locale!
         self.datumISO8601.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ssXXX"
         self.datumISO8601.timeZone = TimeZone.current
-
+        koristenje();
+    }
+    
+    //http://stackoverflow.com/questions/24089999/how-do-you-create-a-swift-date-object
+    func koristenje(){
+        let datum = Date()
+        print(datum);
+        
+        // Specify date components
+        var dateComponents = DateComponents()
+        dateComponents.year = 1980
+        dateComponents.month = 12
+        dateComponents.day = 7
+        dateComponents.timeZone = TimeZone(abbreviation: "Europe/Zagreb") // Japan Standard Time
+        dateComponents.hour = 8
+        dateComponents.minute = 34
+        
+        // Create date from components
+        let userCalendar = Calendar.current // user calendar
+        let datum2 = userCalendar.date(from: dateComponents)
+        
+        print(datum2!);
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy/MM/dd HH:mm"
+        let datum3 = formatter.date(from: "2016/10/08 22:31")
+    
+        
+        print(datum3!);
+        
+        
     }
     
     
